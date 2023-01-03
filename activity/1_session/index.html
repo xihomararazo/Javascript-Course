@@ -32,6 +32,9 @@
                                 nombre] y me dedico a [variable profresión]. Estoy cursando este Máster porque me
                                 gustaría trabajar en [variable del puesto]</code></li>
                         <li>Muestra por pantalla esta última variable.</li>
+                        </br>
+                        <b><p id="sentence"></p></b>
+                        </br>
                         <li>Importa tu fichero <code>aboutme.js</code> en el fichero <code>index.js</code> en la parte
                             del Ejercicio 1 antes del <code>console.log(&quot;Ej 1&quot;)</code>.</li>
                     </ul>
@@ -46,22 +49,71 @@
                         <li>Añade un breakpoint más en <code>console.log(“Ej 1”)</code>.</li>
                         <li>¿Qué se ejecuta antes, la llamada a <code>console.log()</code> o el contenido del fichero
                             <code>aboutme.js</code>? ¿Por qué?</li>
+                        </br>
+                            <p> <b>Se ejecuta primero el aboutme.js por que primero ejecuta todo lo de el script de la importacion antes de continuar con la lectura del archivo.</b></p>
                     </ul>
                     <h2 id="ejercicio-3">Ejercicio 3</h2>
                     <ul>
                         <li>Enumera 3 herramientas útiles dentro de las herramientas de desarrollo de <strong>Google
                                 Chrome</strong> o <strong>Mozila Firefox</strong> (inspector, consola, networking…) y
                             explica su funcionamiento.</li>
+                        </br>
+                            <p>* <b>Elements:</b> Nos permite ver el código html del documento, hacer ajustes del mismo cómo eliminar, cambiar el orden o editar el estilo de los componentes.</p>
+                            <p>* <b>Console:</b> Es un espacio donde podremos hacer debugging del código o hacer pruebas de código de javascript.</p>
+                            <p>* <b>Sources:</b> Nos indica los archivos que se están utilizando en la lectura de la pagina y podemos agregar breakpoint para hacer pruebas en la lectura.</p>
+                            <p>* <b>Network:</b> Nos muestra la comunicación con las solicitudes del archivo, tiempo de carga y o respuesta. </p>
+                            <p>* <b>Performance:</b> nos indica el rendimiento de la pagina y el tiempo que tarda en cargarse.</p>
+                            <p>* <b>Memory:</b> Nos indica la memoria que ocupa.</p>
+                            <p>* <b>Application:</b> Nos indica las cookies que utiliza la pagina.</p>
+                            <p>* <b>Security:</b> nos indica si la pagina cuenta con certificados de seguridad como https.</p>
+                        </br>
                     </ul>
                     <h2 id="ejercicio-4">Ejercicio 4</h2>
                     <ul>
                         <li>Programa un script que imprima todos los números del 1 al 100 que sean divisibles por 7.
                         </li>
+                        
+
+                    <pre><code class="language-javascript">
+for (let i = 0; i < 100; i++) {
+    if (i % 7 == 0) {
+        console.log(i);
+    }
+}                  
+                    </code></pre>
+                    <p id="divisionBy"></p>
                     </ul>
                     <h2 id="ejercicio-5">Ejercicio 5</h2>
                     <ul>
                         <li>¿Cuales son las diferencias entre ejecutar un fichero JavaScript en un navegador web en formato
                             <code>&lt;script&gt;</code> y en formato <code>&lt;script type=”module”&gt;</code>?. Busca documentación para enumerar los principales comportamientos de ambas.</li>
+
+                        <table>
+                            <tr>
+                            <th><code>&lt;script&gt;</code> </th>
+                            <th><code>&lt;script type=”module”&gt;</code></th>
+                            </tr> 
+                            <tr>
+                            <td>Podemos cargar el archivo desde local.</td>
+                            <td>El archivo no se puede cargar como local, necesita ser ejecutado desde un servidor.</td>
+                            </tr>
+                            <tr>
+                                <td>El archivo de javascript suele ser muy grande.</td>
+                                <td>Nos ayuda a crear un javascript más ordenado y a seguir los principios de SOLID, ya que podemos segmentar un archivo en pequeños módulos.</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>Podemos acceder a variables o funciones del scope global pero no a la inversa.</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>Pueden se cargados dínamicamente.</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>Dentro de cada modulo se puede utilizar import / export para enlazar codigo adicional.</td>
+                            </tr>
+                        </table>
                     </ul>
                     <h2 id="ejercicio-6">Ejercicio 6</h2>
                     <ul>
@@ -71,22 +123,60 @@
                             cadena que pasemos como argumento en el método.</li>
                     </ul>
                     <p><code>formatter.append(“World”) // Result: Hello World</code></p>
+                    <pre><code class="language-javascript">
+var formatter = {
+    prefix : "Hello ",
+    append (txt) {
+        console.log(formatter.prefix + txt);
+        }
+}   
+                        
+formatter.append("World");                
+                        </code></pre>
+                    <p id="objAappend"></p>
+                   
                     <ul>
                         <li>Ahora añade mediante el atributo prototype otro método que acepte también un solo argumento
                             e imprima esa misma cadena en minúsculas.</li>
                     </ul>
                     <p><code>formatter.toLowerString(“I’m Lucas”) // Result: i’m lucas</code></p>
-
-
+                    <pre><code class="language-javascript">
+let obj = {
+    toLowerString : function(txt){
+    console.log(txt.toLowerCase());
+    return txt.toLowerCase();
+    }
+}
+let formatter = {
+    prefix : "Hello ",
+    append (txt) {
+        console.log(formatter.prefix + txt);
+        return formatter.prefix + txt;
+        }
+    }
+                        
+formatter.__proto__ = obj; 
+formatter.toLowerString("I’m Lucas");                                           
+                        </code></pre>
+                     
+                    <p id="objToLowerString"></p>
 
                     <hr class="code-separator">
 
                     <h2 id="arrow">Consola JavaScript</h2>
                     <p class="folder">/activity/1_session/index.js</p>
-                    <pre>
-<code class="language-javascript">// Ejercicio 1
+                    
+                    <pre><code class="language-javascript">
+// Ejercicio 1
 
-console.log("Ejercicio 1");
+var fullname = "Xihomara Livier Razo Vargas";
+var profesion = "diseño digital interactivo";
+var job = "coordinación del área de desarrollo de apps en la empresa Colektor"
+
+var sentence =`Hola, me llamo ${fullname} y me dedico al ${profesion}. Estoy cursando este Máster porque me gustaría trabajar en ${job}.`
+    document.getElementById("sentence").innerHTML = sentence;
+
+    console.log("Ejercicio 1");
 
 // Ejercicio 2
 
@@ -94,15 +184,41 @@ console.log("Ejercicio 1");
 
 // Ejercicio 4
 
+for (let i = 0; i < 100; i++) {
+    if (i % 7 == 0) {
+    console.log(i);
+    }
+}
+
 // Ejercicio 5
 
-// Ejercicio 6</code></pre>
+// Ejercicio 6
+let obj = {
+    toLowerString : function(txt){
+        console.log(txt.toLowerCase());
+        return txt.toLowerCase();
+    }
+}
+let formatter = {
+    prefix : "Hello ",
+    append (txt) {
+        console.log(formatter.prefix + txt);
+        return formatter.prefix + txt;
+    }
+}
+
+formatter.append("World");
+
+formatter.__proto__ = obj;
+formatter.toLowerString("I’m Lucas");
+                    </code></pre>
+
 
         </div>
     </div>
     <script src="../../prism.js"></script>
     <script type="module" src="index.js">
-    </script>
+    </script> 
 </body>
 
 </html>
