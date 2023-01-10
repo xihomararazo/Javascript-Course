@@ -31,10 +31,158 @@
 }
 <span class="hljs-comment">// return -&gt; ["name", "age", "profession"]</span>
 </code></pre>
+
+<pre><code class="language-javascript">
+let person =  {
+    name: "Lucas",
+    age: "27",
+    profession:"Developer",
+}
+
+function propertiesToArray (obj) {
+    let array = [ ];
+    Object.keys(obj).forEach((prop) => array.push(String(prop)));
+    return array;
+}
+
+console.log(propertiesToArray(person));
+</code></pre>
+                    <p id="propertiesArray"></p>
                     <h2 id="ejercicio-2">Ejercicio 2</h2>
                     <ul>
                         <li>Enumera los distintos valores que puede tener “this” y pon un ejemplo de cada uno.</li>
                     </ul>
+                   
+                      <p>*Al ejecutarlo en el programa principal, <b>this</b> se refiere al objeto global (en un navegador será window). </p>
+                      
+<pre><code class="language-javascript">
+  console.log(this === window);
+  //true
+</code></pre>
+                   
+                      <p>*En una función, <b>this</b> se refiere al objeto global.</p>
+                     
+<pre><code class="language-javascript">
+function GetThis() {
+  return this;
+}
+GetThis() === window; 
+// true
+</code></pre>
+                    
+                          <p>*En una función en modo estricto, <b>this</b> es undefined</p>
+                         
+<pre><code class="language-javascript">
+function GetThis() {
+  'use strict'; 
+  return this;
+}
+GetThis() === window; 
+// false
+</code></pre>
+                          <p>*En un método, <b>this</b> se refiere al objeto propietario.</p>
+                         
+<pre><code class="language-javascript">
+let user = {
+  age: 12,
+  getAge() {
+    console.log(this.age);
+  }
+}
+user.getAge();
+//12
+</code></pre>
+                          <p>*En un método con arrow function, <b>this</b> se refiere al contexto de la función.</p>
+                         
+<pre><code class="language-javascript">
+var age = 30;
+let user2 = {
+  age: 12,
+  getAge:() => {
+    console.log(this.age);
+  }
+}
+user2.getAge();
+// 30
+</code></pre>
+                    
+                          <p>*En un evento, <b>this</b> se refiere al elemento que recibe el evento.</p>
+                         
+<pre><code class="language-javascript">
+function actionButtonReceiver() {
+    console.log("Button pressed with->");
+    console.log(this);
+}
+document
+  .getElementById("thisBtn")
+  .addEventListener("click", actionButtonReceiver);
+  
+document
+  .getElementById("thisBtn")
+  .addEventListener("otherBtn", actionButtonReceiver);
+</code></pre>
+<button class="custom-button" id="thisBtn">thisBtn </button>
+<button id="otherBtn">thisBtn </button>
+                    
+                        <p>*Métodos como <b>call(), apply() o bind() </b>, modifican el valor de <b>this</b> al objeto que enlazan.</p>
+                     
+<pre><code class="language-javascript">
+let user1 = {
+  name: "Xihomara"
+}
+let user2 = {
+  name: "Livier"
+}
+
+let GetUser = function(age) {
+  return this.name + " tiene "+ age + " años"; 
+}
+//call()
+console.log(GetUser.call(user1, 28));
+//Xihomara tiene 28 años
+
+console.log(GetUser.call(user2, 28));
+//Livier tiene 28 años
+</code></pre>
+<pre><code class="language-javascript">
+let user1 = {
+  name: "Xihomara"
+}
+
+let GetExtraInfo = function(fruta1,fruta2) {
+  return "A " + this.name + " le gustan frutas como "+ fruta1 +" y "+ fruta2; 
+}
+
+let frutas = ["fresa", "Mango"]
+//apply()
+//El mismo concepto que call pero pasando los parámetros como arrays
+
+console.log(GetExtraInfo.apply(user1, frutas));
+//A Xihomara le gustan frutas como fresa y Mango
+
+</code></pre>
+<pre><code class="language-javascript">
+let user3 = {
+  name: "Xihomara",
+  age: 28
+}
+let user4 = {
+  name: "Livier",
+  age: 28
+}
+let otherFunc = function() {
+    return this.name + " tiene "+ this.age + " años";
+}
+//bind()
+//Devuelve una función
+var returnedFunc = otherFunc.bind(user3);
+console.log(returnedFunc());
+//Xihomara tiene 28 años
+console.log(otherFunc.bind(user4)());
+//Livier tiene 28 años
+
+</code></pre>
+                    
                     <h2 id="ejercicio-3">Ejercicio 3</h2>
                     <ul>
                     <li>Crea una clase a la que llamaremos &quot;InvertirCadena&quot; con las siguientes propiedades:</li>
@@ -44,7 +192,61 @@
                     <li>Ahora instancia la clase en un objeto que llamaremos <code>invertirCadena</code>.</li>
                     </ul>
                     <p>Ejecuta primero la función sin cambiar <code>cadenaInvertir</code>. ¿Cómo podemos hacer para que nuestro código no rompa al ejecutarse?. Ahora cambia el valor a <code>cadenaInvertir</code> y vuelve a llamar la función. ¿Cuál es el resultado?. Por último, intenta acceder al siguiente método <code>invertirCadena.nuevoMetodo()</code>. ¿Cómo podemos hacer para que no de un error?</p>
-                    
+<pre><code class="language-javascript">
+class InvertirCadena {
+  constructor(cadenaInvertir) {
+    this.cadenaInvertir = cadenaInvertir;
+  }
+
+  cadenaInvertir = "";
+
+  reverseText = (_) => {
+    try {
+      if (this.cadenaInvertir == null) {
+        throw new SyntaxError(
+          "Error, el parámetro de la cadena cadenaInvertir no se definio"
+        );
+      }
+      if (this.cadenaInvertir == "") {
+        throw new SyntaxError(
+          "Error, el parámetro de la cadena cadenaInvertir es vacío"
+        );
+      }
+      let splitString = this.cadenaInvertir.split("");
+      let reverseArray = splitString.reverse();
+      let joinArray = reverseArray.join("");
+      return joinArray;
+    } catch (err) {
+      if (err instanceof SyntaxError) {
+        console.log("Syntax Error: " + err.message);
+      } 
+    }
+  };
+}
+
+
+//1 si la cadena no es declarada como parametro se imprime
+//"Error, el parámetro de la cadena cadenaInvertir no se definio"
+const invertirCadenaNull = new InvertirCadena();
+console.log(invertirCadenaNull.reverseText());
+
+//2 si la cadena existe y no tine caracteres se imprime
+//"Error, el parámetro de la cadena cadenaInvertir es vacío"
+const invertirCadenaVacia = new InvertirCadena("");
+console.log(invertirCadenaVacia.reverseText());
+
+//3 si la cadena esta fefinida y es diferente a ""
+const invertirCadena = new InvertirCadena("Hola mundo");
+console.log(invertirCadena.reverseText());
+
+//4 cuando el metodo no existe y no queremos que de error
+const invertirCadenaMetodo = new InvertirCadena("algo");
+try {
+  console.log(invertirCadenaMetodo.nuevoMetodo());
+} catch (error) {
+  console.log("El metodo solicitado no existe ");
+}
+</code></pre>
                     <h2 id="ejercicio-4">Ejercicio 4</h2>
                     <ul>
                         <li>Crea una clase con el formato ES6. Esta clase va a tener dos atributos, <em>username</em> y
@@ -55,6 +257,54 @@
                     </ul>
                     <pre><code class="lang-javascript">let login = new Login(“admin”, “passwd”) // alert -&gt; <span class="hljs-keyword">User</span> <span class="hljs-title">logged</span> <span class="hljs-keyword">in</span>
 let logbad = new Login(“pepe”, “bad”) // alert -&gt; <span class="hljs-keyword">User</span> <span class="hljs-title">or</span> passwd incorrect
+</code></pre>
+
+
+                    <h4>username</h4>
+                    <input id="username" type="text" value="">
+                    <h4>password</h4>
+                    <input id="password" type="text" value="">
+                    <button class="custom-button" id="tryToLogin">Login</button>
+                    <h5 id="loginRes"></h5>
+<pre><code class="language-javascript">
+class Login {
+  constructor(username, password) {
+    this.username = username;
+    this.password = password;
+  }
+
+  login = (_) => {
+    try {
+      if (this.username == null || this.password == null) {
+        throw new SyntaxError("Error, uno o mas parametros no estan definidos");
+      }
+      if (this.username !== "admin" || this.password !== "passwd") {
+        return "El usuario o la contraseña son incorrectas";
+      } else {
+        alert("Login exitoso");
+        return "Login exitoso";
+      }
+    } catch (err) {
+      if (err instanceof SyntaxError) {
+        console.log("Error: " + err.message);
+      }
+    }
+  };
+}
+function tryToLogin() {
+  let username = document.getElementById("username").value;
+  let password = document.getElementById("password").value;
+  let loginRes = new Login(username, password).login();
+
+  document.getElementById("loginRes").innerHTML = loginRes;
+  console.log(loginRes);
+  console.log("carga funcion");
+}
+
+document.getElementById("tryToLogin").addEventListener("click", () => {
+  console.log("pressed");
+  tryToLogin();
+});
 </code></pre>
                     <h2 id="ejercicio-5">Ejercicio 5</h2>
                     <p>En este ejercicio os voy a hacer mirar un poco de documentación extra. Y vamos a utilizar el
@@ -70,6 +320,19 @@ let logbad = new Login(“pepe”, “bad”) // alert -&gt; <span class="hljs-k
                         <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/click_event">Click
                                 Listener</a></li>
                     </ul>
+<pre><code class="language-javascript">
+document.getElementById("loginSuccess").addEventListener("click", () => {
+  console.log("loginSuccess");
+  let loginRes = new Login("admin", "passwd").login();
+});
+
+document.getElementById("loginFailure").addEventListener("click", () => {
+  console.log("loginFailure");
+  let loginRes = new Login("x", "x").login();
+});
+</code></pre>
+                    <!-- <button id="loginSuccess">loginSuccess</button>
+                    <button id="loginFailure">loginFailure</button> -->
                     <h2 id="ejercicio-6">Ejercicio 6</h2>
                     <p>En este ejercicio vamos a añadir asincronía al resto de botones:</p>
                     <ul>
@@ -92,8 +355,42 @@ let logbad = new Login(“pepe”, “bad”) // alert -&gt; <span class="hljs-k
                                     falle</strong>.</p>
                         </li>
                     </ul>
+                    <!-- <button id="loginSuccessAsync">loginSuccess</button>
+                    <button id="loginFailureAsync">loginFailure</button> -->
+<pre><code class="language-javascript">
+let loginWitUsername = (username, password) => {
+  return new Promise(function (resolve, rejected) {
+    setTimeout(() => {
+      if (username === "admin" && password === "passwd") {
+        resolve("User logged in");
+      } else {
+        rejected("Error: invalid username or password");
+      }
+    }, 200);
+  });
+};
 
+document
+  .getElementById("loginSuccessAsync")
+  .addEventListener("click", async () => {
+    try {
+      let res = await loginWitUsername("admin", "passwd");
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  });
 
+document
+  .getElementById("loginFailureAsync")
+  .addEventListener("click", async () => {
+    try {
+      await loginWitUsername("x", "x");
+    } catch (err) {
+      console.log(err);
+    }
+  });
+</code></pre>
 
                     <hr class="code-separator">
 
@@ -104,18 +401,130 @@ let logbad = new Login(“pepe”, “bad”) // alert -&gt; <span class="hljs-k
                     <button class="custom-button" id="loginSuccessAsync">Login Async</button>
                     <button class="custom-button button-cancel" id="loginFailureAsync">Error Async</button>
                     <pre>
-<code class="language-javascript">// Ejercicio 1
+<code class="language-javascript">
+// Ejercicio 1
+
+let person =  {
+    name: "Lucas",
+    age: "27",
+    profession:"Developer",
+}
+function propertiesToArray (obj) {
+    let array = [];
+    Object.keys(obj).forEach((prop) => array.push(String(prop)));
+    return array;
+}
+
+console.log(propertiesToArray(person));
 
 // Ejercicio 2
 
 // Ejercicio 3
+class InvertirCadena {
+  constructor(cadenaInvertir) {
+    this.cadenaInvertir = cadenaInvertir;
+  }
+
+  cadenaInvertir = "";
+
+  reverseText = (_) => {
+    try {
+      if (this.cadenaInvertir == null) {
+        throw new SyntaxError(
+          "Error, el parámetro de la cadena cadenaInvertir no se definio"
+        );
+      }
+      if (this.cadenaInvertir == "") {
+        throw new SyntaxError(
+          "Error, el parámetro de la cadena cadenaInvertir es vacío"
+        );
+      }
+      let splitString = this.cadenaInvertir.split("");
+      let reverseArray = splitString.reverse();
+      let joinArray = reverseArray.join("");
+      return joinArray;
+    } catch (err) {
+      if (err instanceof SyntaxError) {
+        console.log("Syntax Error: " + err.message);
+      } 
+    }
+  };
+}
+
+//1 si la cadena no es declarada como parametro se imprime
+//"Error, el parámetro de la cadena cadenaInvertir no se definio"
+const invertirCadenaNull = new InvertirCadena();
+console.log(invertirCadenaNull.reverseText());
+
+//2 si la cadena existe y no tine caracteres se imprime
+//"Error, el parámetro de la cadena cadenaInvertir es vacío"
+const invertirCadenaVacia = new InvertirCadena("");
+console.log(invertirCadenaVacia.reverseText());
+
+//3 si la cadena esta fefinida y es diferente a ""
+const invertirCadena = new InvertirCadena("Hola mundo");
+console.log(invertirCadena.reverseText());
+
+//4 cuando el metodo no existe y no queremos que de error
+const invertirCadenaMetodo = new InvertirCadena("algo");
+try {
+  console.log(invertirCadenaMetodo.nuevoMetodo());
+} catch (error) {
+  console.log("El metodo solicitado no existe ");
+}
 
 // Ejercicio 4
+class Login {
+  constructor(username, password) {
+    this.username = username;
+    this.password = password;
+  }
+
+  login = (_) => {
+    try {
+      if (this.username == null || this.password == null) {
+        throw new SyntaxError("Error, uno o mas parametros no estan definidos");
+      }
+      if (this.username !== "admin" || this.password !== "passwd") {
+        return "El usuario o la contraseña son incorrectas";
+      } else {
+        alert("Login exitoso");
+        return "Login exitoso";
+      }
+    } catch (err) {
+      if (err instanceof SyntaxError) {
+        console.log("Error: " + err.message);
+      }
+    }
+  };
+}
+function tryToLogin() {
+  let username = document.getElementById("username").value;
+  let password = document.getElementById("password").value;
+  let loginRes = new Login(username, password).login();
+
+  document.getElementById("loginRes").innerHTML = loginRes;
+  console.log(loginRes);
+  console.log("carga funcion");
+}
+
+document.getElementById("tryToLogin").addEventListener("click", () => {
+  console.log("pressed");
+  tryToLogin();
+});
 
 // Ejercicio 5
+document.getElementById("loginSuccess").addEventListener("click", () => {
+  console.log("loginSuccess");
+  let loginRes = new Login("admin", "passwd").login();
+});
+
+document.getElementById("loginFailure").addEventListener("click", () => {
+  console.log("loginFailure");
+  let loginRes = new Login("x", "x").login();
+});
 
 // Ejercicio 6
-
 let loginWitUsername = (username, password) => {
     return new Promise(function (resolve, rejected) {
         setTimeout(() => {
@@ -126,14 +535,37 @@ let loginWitUsername = (username, password) => {
         }
         }, 200);
     });
-};</code>
+};
+document
+  .getElementById("loginSuccessAsync")
+  .addEventListener("click", async () => {
+    try {
+      let res = await loginWitUsername("admin", "passwd");
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+document
+  .getElementById("loginFailureAsync")
+  .addEventListener("click", async () => {
+    try {
+      await loginWitUsername("x", "x");
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+
+</code>
 </pre>
 
         </div>
     </div>
     <script src="../../prism.js"></script>
-    <script src="index.js">
-    </script>
+    <script type="module" src="index.js"></script>
+
 </body>
 
 </html>
