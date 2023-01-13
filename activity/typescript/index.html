@@ -28,18 +28,99 @@
 <pre><code class="lang-javascript">// input name -&gt; Lucas / age -&gt; <span class="hljs-number">28</span> / profession -&gt; Full Stack
 // <span class="hljs-keyword">return</span> -&gt; [<span class="hljs-string">"Lucas"</span>, <span class="hljs-number">28</span>, <span class="hljs-string">"profession"</span>]
 </code></pre>
+<img class="container-image" src="/meta/ts01.png">
+<pre><code class="lang-javascript"> 
+interface Person {
+  name: string;
+  age: number;
+  profession: string;
+}
+const myPerson: Person = {
+  name: "Xihomara",
+  age: 28,
+  profession: "Diseñador digital interactivo",
+};
+type propiedades = string | number;
+
+let getParametros = (obj: Person): Array<propiedades> => Object.values(obj);
+
+console.log(getParametros(myPerson)); 
+</code></pre>
                     <h2 id="ejercicio-2">Ejercicio 2</h2>
                     <p>Escribe una función llamada <code>sumOrConcatenate</code> que acepte dos parámetros. Cada uno de estos parámetros podrá ser de tipo <code>number</code> o <code>string</code>. La función devolverá una suma si los dos parámetros son números, una concatenación con el símbolo <code>-</code> si son los dos <code>strings</code> o una cadena concatenadad con <code>+</code> si uno es un <code>number</code> y el otro <code>string</code>.</p>
 <pre><code class="lang-javascript">console.<span class="hljs-built_in">log</span>(sumOrConcatenate(<span class="hljs-number">4</span>, <span class="hljs-number">3</span>)); <span class="hljs-comment">// 7</span>
 console.<span class="hljs-built_in">log</span>(sumOrConcatenate(<span class="hljs-number">4</span>, <span class="hljs-string">"hello"</span>)); <span class="hljs-comment">// 4+hello </span>
 console.<span class="hljs-built_in">log</span>(sumOrConcatenate(<span class="hljs-string">"hello"</span>, <span class="hljs-string">"world"</span>)); <span class="hljs-comment">//hello-world</span>
 </code></pre>
+<img class="container-image" src="/meta/ts02.png">
+<pre><code class="lang-javascript"> 
+function sumOrConcatenate(v1: string | number, v2: string | number) {
+  if (typeof v1 === "number" && typeof v2 === "number") {
+    return v1 + v2;
+  } else if (typeof v1 === "string" && typeof v2 === "string") {
+    return v1 + "-" + v2;
+  } else {
+    return v1 + ":" + v2;
+  }
+}
+console.log(sumOrConcatenate(4, 3));
+console.log(sumOrConcatenate(4, "hello"));
+console.log(sumOrConcatenate("hello", 4));
+console.log(sumOrConcatenate("hello", "world"));
+</code></pre>
                     <h2 id="ejercicio-3">Ejercicio 3</h2>
                     <p>Crea dos interfaces, una llamada <code>Car</code> y otra <code>Motorcycle</code>. La primera tendrá las propiedades <code>tires</code> (number), <code>turnOnEngine()</code> (función que devuelve void) y <code>pressPedal()</code> (función que devuelve void).
                     La segunda tendrá las propiedades <code>tires</code> (number), <code>turnOnEngine()</code> (función que devuelve void) y <code>openThrottle()</code> (función que devuelve void).
                     Escribe una función que acepte un parámetro que pueda ser <code>Car</code> o <code>Motorcycle</code> que, primero llame a turnOnEngine, y luego si es Car llame a pressPedal pero si es Motorcycle llame a openThrottle().
                     Para la comprobación no valdrá <code>typeof</code>, necesitaremos hacer uso de <a href="https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates">type predicates</a>.</p>
-                    
+                    <img class="container-image" src="/meta/ts03.png">
+<pre><code class="lang-javascript"> 
+interface Car {
+  tires: number;
+  turnOnEngine: () => void;
+  pressPedal: () => void;
+}
+interface Motorcycle {
+  tires: number;
+  turnOnEngine: () => void;
+  openThrottle: () => void;
+}
+const myCar: Car = {
+  tires: 4,
+  turnOnEngine: function () {
+    console.log("turnOnEngine");
+  },
+  pressPedal: function () {
+    console.log("pressPedal");
+  },
+};
+const myMotorcycle: Motorcycle = {
+  tires: 4,
+  turnOnEngine: function () {
+    console.log("turnOnEngine");
+  },
+  openThrottle: function () {
+    console.log("openThrottle");
+  },
+};
+
+type carOrMotorcycle = Car | Motorcycle;
+
+function isCar(obj: carOrMotorcycle): obj is Car {
+  return (obj as Car).pressPedal !== undefined;
+}
+function acive(obj: carOrMotorcycle) {
+  obj.turnOnEngine();
+  if (isCar(obj)) {
+    obj.pressPedal();
+  } else {
+    obj.openThrottle();
+  }
+}
+acive(myCar);
+acive(myMotorcycle);
+
+</code></pre>
                     <h2 id="ejercicio-4">Ejercicio 4</h2>
                     <p>Crea una <code>función genérica</code>, que acepte un array que pueda contener <code>strings</code> y <code>numbers</code> y devuelva el <strong>mismo array sin el primer elemento</strong>.</p>
 <pre><code class="lang-javascript"><span class="hljs-keyword">const</span> strArray: string[] = [<span class="hljs-string">'Hello'</span>, <span class="hljs-string">'World'</span>, <span class="hljs-string">'Im'</span>, <span class="hljs-string">'a'</span>, <span class="hljs-string">'Full'</span>, <span class="hljs-string">'Stack'</span>, <span class="hljs-string">'Developer'</span>];
@@ -56,11 +137,47 @@ console.log(newStrArray); //</span><span class="hljs-function"> --&gt;</span> [<
 <span class="hljs-built_in">console</span>.log(newNumArray); <span class="hljs-regexp">// --&gt; [2, 3, 4, 5, 6, 7];
 console.log(newMixedArray); //</span><span class="hljs-function"> --&gt;</span> [<span class="hljs-string">'I'</span>, <span class="hljs-string">'have'</span>, <span class="hljs-number">3</span>, <span class="hljs-string">'tasks'</span>];
 </code></pre>
+<img class="container-image" src="/meta/ts04.png">
+<img class="container-image" src="/meta/ts04_1.png">
+<pre><code class="lang-javascript"> 
+type stringOrNumber = string | number;
 
+function removeFirstEntry<T extends keyof stringOrNumber | string | number>(
+  curentArray: Array<T>
+): Array<T> {
+  return curentArray.slice(1, curentArray.length);
+}
+
+const strArray: string[] = [
+  "Hello",
+  "World",
+  "Im",
+  "a",
+  "Full",
+  "Stack",
+  "Developer",
+];
+const newStrArray = removeFirstEntry(strArray);
+console.log(newStrArray); //["World", "Im", "a", "Full", "Stack", "Developer"]
+
+const numArray: number[] = [1, 2, 3, 4, 5, 6, 7];
+const newNumArray = removeFirstEntry(numArray);
+console.log(newNumArray); //[2, 3, 4, 5, 6, 7]
+
+const mixedArray: Array<number | string> = ["Hello", "I", "have", 3, "tasks"];
+const newMixedArray = removeFirstEntry(mixedArray);
+console.log(newMixedArray); //["I", "have", 3, "tasks"]
+
+//const unsupportedArray = [{ name: "Lucas", surname: "Fernandez" }, "Hello", 22]; --> will fail
+// Argument of type '(string | number | { name: string; surname: string; })[]' is not assignable to parameter of type '(string | number)[]'.
+// Type 'string | number | { name: string; surname: string; }' is not assignable to type 'string | number'.
+// Type '{ name: string; surname: string; }' is not assignable to type 'string | number'.
+
+</code></pre>
         </div>
     </div>
     <script src="../../prism.js"></script>
-    <script src="index.js">
+    <script type="module" src="index.js">
     </script>
 </body>
 
